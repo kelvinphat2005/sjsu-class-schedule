@@ -6,7 +6,7 @@ import { Routes } from 'react-router-dom';
 import './index.css'
 import App from './App.tsx'
 import ClassPage from './components/ClassPage.tsx';
-
+import CalendarPage from './components/CalendarPage.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<App />}>
           <Route index element={<div className="text-neutral-300">Select a class</div>} />
           <Route path="class/:id" element={<ClassPage />} />
+          <Route path="calendar" element={<CalendarPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
