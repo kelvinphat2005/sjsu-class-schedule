@@ -1,10 +1,12 @@
 import type { ClassRow } from "../scraper/ClassSchedulesScraper";
 import { Link } from "react-router";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { getProfessor } from "../scraper/ClassServerClient";
 import type { professorRating } from "../scraper/RateMyProfessorScraper";
+import { rmpCache } from "../lib/rmpCache";
+
 
 interface ClassTileProps {
     classRow: ClassRow;
@@ -14,16 +16,26 @@ interface ClassTileProps {
 }
 
 export function ClassTile({ classRow, isFavorited, onFavoritesClick, addToCalendar }: ClassTileProps) {
-    const [profRating, setProfRating] = useState<professorRating | undefined>(undefined);
+    const nameKey = classRow.instructor?.trim() || '';
+    const [profRating, setProfRating] = useState<number  | null>(
+        nameKey ? rmpCache.get(nameKey) : null
+    );
+    const didFetch = useRef(false);
 
     useEffect(() => {
+        if (!nameKey || didFetch.current || profRating !== null) return;
+        didFetch.current = true;
+
         const getProfRating = async () => {
             try {
                 const res = await getProfessor(classRow.instructor);
-                setProfRating(res.ratings);
+                const val = res?.ratings.avgRating ?? null;
+                rmpCache.set(nameKey, val);
+                setProfRating(res.ratings.avgDifficulty);
             } catch (e) {
                 console.error("Error fetching professor rating: ", e);
-                setProfRating(undefined);
+                rmpCache.set(nameKey, null);
+                setProfRating(null);
             }
         }
 
@@ -67,7 +79,7 @@ export function ClassTile({ classRow, isFavorited, onFavoritesClick, addToCalend
                             {classRow.instructor}
                         </div>
                         <div>
-                            {profRating ? `⭐ ${profRating.avgRating?.toFixed(2)} (${profRating.numRatings} ratings)` : "No RMP Data"}
+                            {profRating ? `⭐ ${profRating?.toFixed(2)} (${profRating} ratings)` : "No RMP Data"}
                         </div>
                     </div>
                     <div className="flex flex-row justify-between">

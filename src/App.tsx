@@ -35,6 +35,7 @@ function App() {
     favorites: false,
     openSeats: false,
   });
+  const [visible, setVisible] = useState<{startIndex: number; endIndex: number}>({ startIndex: 0, endIndex: 0 });
 
   effect(() => setItem("calendarClasses", calendarClasses.value));
 
@@ -105,7 +106,11 @@ function App() {
 
   const handleAddToCalendar = (c: ClassRow) => {
     console.log("add to calendar", c);
+
+    if (c.modeOfInstruction === "Online") return; // do not add online classes
+
     const label = `${c.subject} ${c.course}`;
+    const groupKey = `${c.classNumber}`;
     
     const add : CalendarClass[] = parseDays(c.days).map((d) => ({
       time: {
@@ -116,7 +121,13 @@ function App() {
       label: label,
       location: c.location,
       professor: c.instructor, 
+      groupKey: groupKey,
     }));
+
+    // prevent dupes
+    const exists = calendarClasses.value.some((cls) => cls.groupKey === groupKey);
+    if (exists) return; 
+
     calendarClasses.value = [...calendarClasses.value, ...add];
   }
 
@@ -182,6 +193,8 @@ function App() {
             className="h-full gap-2"
             data={filtered}
             computeItemKey={(_, it) => it.classNumber}
+            increaseViewportBy={{ top: 200, bottom: 400 }}
+            rangeChanged={(r) => setVisible(r)}
             itemContent={(_, item) =>
               <div>
                 <ClassTile classRow={item}

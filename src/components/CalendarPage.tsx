@@ -12,7 +12,7 @@ export default function CalendarPage() {
     useSignals();
 
     const handleDelete = (target: CalendarClass) => {
-        calendarClasses.value = calendarClasses.value.filter(c => (c !== target));
+        calendarClasses.value = calendarClasses.value.filter(c => (c.groupKey !== target.groupKey));
     };
     return(
         <>  

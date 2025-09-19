@@ -10,7 +10,7 @@ export type CalendarClass = {
   label: string;
   location: string;
   professor: string;
-  
+  groupKey?: string; // group classes together (e.g. same class different days)
 }
 
 interface CalendarProps {
