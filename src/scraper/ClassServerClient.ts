@@ -36,8 +36,8 @@ export async function getClassDetails(classNumber: number): Promise<ClassDetails
 }
 
 // get all professor reviews using professor full name
-export async function getProfessor(professorName: string) : Promise<{comments : professorComment[], ratings: professorRating}> {
-  const res = await fetch(`/api/professors/${encodeURIComponent(professorName)}`);
+export async function getProfessor(professorName: string, signal?: AbortSignal) : Promise<{comments : professorComment[], ratings: professorRating}> {
+  const res = await fetch(`/api/professors/${encodeURIComponent(professorName)}`, {signal});
   if (!res.ok) {
     throw new Error(`Client HTTP ${res.status}`);
   }

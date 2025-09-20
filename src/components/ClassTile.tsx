@@ -20,27 +20,30 @@ export function ClassTile({ classRow, isFavorited, onFavoritesClick, addToCalend
     const [profRating, setProfRating] = useState<number  | null>(
         nameKey ? rmpCache.get(nameKey) : null
     );
-    const didFetch = useRef(false);
 
     useEffect(() => {
-        if (!nameKey || didFetch.current || profRating !== null) return;
-        didFetch.current = true;
+        if (profRating) return;
+
+        const controller = new AbortController();
 
         const getProfRating = async () => {
             try {
-                const res = await getProfessor(classRow.instructor);
+                const res = await getProfessor(classRow.instructor, controller.signal);
                 const val = res?.ratings.avgRating ?? null;
                 rmpCache.set(nameKey, val);
                 setProfRating(res.ratings.avgDifficulty);
             } catch (e) {
-                console.error("Error fetching professor rating: ", e);
+                console.error("Error fetching professor rating: ", e, nameKey);
                 rmpCache.set(nameKey, null);
                 setProfRating(null);
             }
         }
-
         getProfRating();
-    }, [classRow.instructor]);
+
+        return () => {
+            controller.abort("abort")
+        }
+    }, []);
 
     return (
         <Link to={addToCalendar !== undefined ? "/calendar" : `/class/${classRow.classNumber}`} state={{ classRow }}>
@@ -57,11 +60,9 @@ export function ClassTile({ classRow, isFavorited, onFavoritesClick, addToCalend
                     </div>
                     {/** favorite button */}
                     <div>
-                        <button onClick={onFavoritesClick}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill={isFavorited ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
-                                <path d="M12 21s-7-4.534-9.5-8.25C.5 8.5 3 5 6.5 5 8.24 5 9.91 5.81 11 7c1.09-1.19 2.76-2 4.5-2C19 5 21.5 8.5 21.5 12.75 19 16.466 12 21 12 21z" />
-                            </svg>
-                        </button>
+                        <svg onClick={onFavoritesClick} width="20" height="20" viewBox="0 0 24 24" fill={isFavorited ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                            <path d="M12 21s-7-4.534-9.5-8.25C.5 8.5 3 5 6.5 5 8.24 5 9.91 5.81 11 7c1.09-1.19 2.76-2 4.5-2C19 5 21.5 8.5 21.5 12.75 19 16.466 12 21 12 21z" />
+                        </svg>
                     </div>
                 </div>
                 {/** body */}

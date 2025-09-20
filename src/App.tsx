@@ -193,7 +193,7 @@ function App() {
             className="h-full gap-2"
             data={filtered}
             computeItemKey={(_, it) => it.classNumber}
-            increaseViewportBy={{ top: 200, bottom: 400 }}
+            increaseViewportBy={{ top: 10, bottom: 10 }}
             rangeChanged={(r) => setVisible(r)}
             itemContent={(_, item) =>
               <div>
