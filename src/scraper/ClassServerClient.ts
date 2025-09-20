@@ -12,7 +12,7 @@ export async function getClassesAPI(): Promise<ClassRow[]> {
   return rows as ClassRow[];
 }
 
-// get specific class details from `classes.json` using classNumber
+// get specific class details from `classes.json` using classNumber (prof, section, dates, times, rooms, etc)
 export async function getClass(classNumber : number): Promise<ClassRow> {
   const res = await fetch(`/api/classes/${classNumber}`);
   if (!res.ok) {
@@ -24,7 +24,7 @@ export async function getClass(classNumber : number): Promise<ClassRow> {
   return row as ClassRow;
 }
 
-//get class details from `classDetails.json` using classNumber
+//get class details from `classDetails.json` using classNumber (course description, prereqs, ge, etc)
 export async function getClassDetails(classNumber: number): Promise<ClassDetails> {
   const res = await fetch(`/api/classes/${classNumber}/details`);
   if (!res.ok) {

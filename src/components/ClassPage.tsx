@@ -13,7 +13,7 @@ import { signal, computed, effect } from "@preact/signals-react";
 import ProfessorRatingDisplay from "./ProfessorRatingDisplay";
 import ProfessorCommentsDisplay from "./ProfessorCommentsDisplay";
 
-
+import RelatedClassesBar from "./RelatedClassesBar";
 
 
 
@@ -109,6 +109,10 @@ export default function ClassPage() {
                 </div>
             </div>
 
+            {/** related classes */}
+            <div className="flex rounded-lg">
+                <RelatedClassesBar classNumber={currClass.classNumber}/>
+            </div>
 
             {/** reviews */}
             {profRatings && (
