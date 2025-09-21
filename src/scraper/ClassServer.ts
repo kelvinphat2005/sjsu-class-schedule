@@ -15,7 +15,7 @@ import { getComments, getRatings } from "./RateMyProfessorScraper";
 import path from "node:path";
 
 
-const PATH = path.resolve(process.cwd(), "public", "data", "classes.json");
+const PATH = path.resolve(process.cwd(), ".cache", "classes.json");
 const PORT = 5174;
 
 const app = express();

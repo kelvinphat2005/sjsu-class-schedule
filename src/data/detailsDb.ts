@@ -9,7 +9,7 @@ type Data = {
   courseDetails: Record<string, ClassDetails>;
 };
 
-const FILE = path.resolve(process.cwd(), "public", "data", "classDetails.json");
+const FILE = path.resolve(process.cwd(), ".cache", "classDetails.json");
 const adapter = new JSONFile<Data>(FILE);
 const db = new Low<Data>(adapter, { courseDetails: {} });
 

@@ -9,7 +9,7 @@ type Data = {
     comments: Record<string, professorComment[]>;
 };
 
-const FILE = path.resolve(process.cwd(), "public", "data", "professors.json");
+const FILE = path.resolve(process.cwd(), ".cache", "professors.json");
 const adapter = new JSONFile<Data>(FILE);
 const db = new Low<Data>(adapter, { comments: {}, ratings: {} });
 
