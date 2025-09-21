@@ -1,7 +1,6 @@
 import express from "express";
 import fs from "fs";
-import { readFile } from "node:fs/promises";
-
+import { constants } from "node:fs";
 import type { ClassRow } from "./ClassSchedulesScraper";
 
 import { writeClassDetails, readClassDetails } from "../data/detailsDb";
@@ -11,19 +10,42 @@ import { findCourseLink, getCourseDetails } from "./CourseCatalogScraper";
 
 import { readProfessorComments, writeProfessorComments, readProfessorRatings, writeProfessorRatings } from "../data/professorsDb";
 import { getComments, getRatings } from "./RateMyProfessorScraper";
-
+import { getClasses } from "./ClassSchedulesScraper"; // <- use to seed once
 import path from "node:path";
+import { mkdir, readFile, writeFile, access } from "node:fs/promises";
 
 
-const PATH = path.resolve(process.cwd(), ".cache", "classes.json");
+const PATH = path.resolve(process.cwd(), ".cache", "classes.json")
+const PATH2 = path.resolve(process.cwd(), ".cache", "classDetails.json");;
 const PORT = 5174;
 
 const app = express();
 
 // map each class by classNumber on startup
-const rows: ClassRow[] = JSON.parse(fs.readFileSync(PATH, "utf8"));
-const byClassNumber = new Map<number, ClassRow>();
-for (const r of rows) byClassNumber.set(r.classNumber, r);
+let rows: ClassRow[] = [];
+let byClassNumber = new Map<number, ClassRow>();
+
+
+async function init() {
+  // 1) ensure folder exists
+  await mkdir(path.dirname(PATH), { recursive: true });
+  await mkdir(path.dirname(PATH2), { recursive: true });
+
+  // 2) create/seed file if missing
+  try {
+    await access(PATH, constants.F_OK);
+    await access(PATH2, constants.F_OK);
+  } catch {
+    // Seed from scraper (or set to [] if you prefer)
+    const seeded = await getClasses();
+    await writeFile(PATH, JSON.stringify(seeded, null, 2), "utf8");
+  }
+
+  // 3) load into memory + build index
+  const text = await readFile(PATH, "utf8");
+  rows = JSON.parse(text) as ClassRow[];
+  byClassNumber = new Map(rows.map(r => [r.classNumber, r]));
+}
 
 // read `classes.json` and return all classes
 app.get("/api/classes", async (req, res) => {
@@ -101,4 +123,9 @@ app.get("/api/professors/:professorName", async (req, res) => {
     }
 });
 
-app.listen(PORT, () => console.log("API Running"));
+init()
+  .then(() => app.listen(PORT, () => console.log("API Running on", PORT)))
+  .catch((e) => {
+    console.error("Failed to init:", e);
+    process.exit(1);
+  });

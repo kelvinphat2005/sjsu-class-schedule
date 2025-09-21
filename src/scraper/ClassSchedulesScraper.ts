@@ -1,6 +1,8 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import * as fs from "fs";
+import path from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
 
 const URL: string = "https://www.sjsu.edu/classes/schedules/fall-2025.php";
 
@@ -76,14 +78,10 @@ export async function getClasses(): Promise<ClassRow[]> {
 
 export async function saveToJson(
   classes: ClassRow[],
-  filePath: string = "./public/data/classes.json"
 ) {
-  const json = JSON.stringify(classes, null, 2);
-  await fs.writeFile(filePath, json, "utf8", (err) => {
-    if (err) {
-      throw err;
-    }
-  });
+  const filePath = path.resolve(process.cwd(), ".cache", "classes.json");
+  await mkdir(path.dirname(filePath), { recursive: true });   // ✅ options recognized
+  await writeFile(filePath, JSON.stringify(classes, null, 2), "utf8");
 }
 
 // todo: just save as json, skip csv
