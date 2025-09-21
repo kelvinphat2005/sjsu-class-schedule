@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 
 import { getClass, getClassesAPI } from "../scraper/ClassServerClient"
 import type { ClassRow } from "../scraper/ClassSchedulesScraper"
+import type { professorRating } from "../scraper/RateMyProfessorScraper";
+import { getProfessor } from "../scraper/ClassServerClient";
 
 /**
  * Given a class number, find related sections
@@ -67,9 +69,31 @@ interface RelatedClassTileProp {
 }
 
 function RelatedClassTile({c} : RelatedClassTileProp) {
+    const [profRatings, setProfRatings] = useState<professorRating | null>(null);
     const navigate = useNavigate();
+
+    useEffect( () => {
+        const p = async () => {
+            const profRes = await getProfessor(c.instructor);
+            if (!profRes) {
+                console.error("couldnt get/find professor");
+                return
+            }
+            setProfRatings(profRes.ratings);
+        }
+
+        p();
+    }, [])
+
+    const difficultyBg = (r: number | null) => {
+        if (!r) return "bg-black-100";
+        if (r >= 4) return "bg-green-600";
+        if (r >= 3) return "bg-yellow-500";
+        return "bg-red-600";
+    };
+
     return(
-        <div className="flex flex-col rounded-sm border border-2 border-solid p-2 my-2 space-between text-lg min-w-[200px] bg-neutral-700
+        <div className="flex flex-col rounded-sm border border-2 border-solid p-2 my-2 justify-between text-lg min-w-[200px] bg-neutral-700
                         hover:bg-neutral-800 duration-300 cursor-pointer"
             onClick={() => {navigate(`/class/${c.classNumber}`)}}
         >
@@ -82,8 +106,13 @@ function RelatedClassTile({c} : RelatedClassTileProp) {
             <div>
                 {c.days} {c.times}
             </div>
-            <div>
+            <div className="flex flex-row gap-2 justify-between items-center">
                 {c.instructor}
+                <div className={`grid w-8 h-8 grid w-8 h-8 shrink-0 place-items-center rounded text-sm font-semibold
+                    ${profRatings ? difficultyBg(profRatings?.avgDifficulty) : 0}`}
+                >
+                    {profRatings ? profRatings.avgDifficulty : "" }
+                </div>
             </div>
         </div>
     );
