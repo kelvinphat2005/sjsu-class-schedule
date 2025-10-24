@@ -1,10 +1,10 @@
-import type { ClassRow } from "../scraper/ClassSchedulesScraper";
+import type { ClassRow } from "../../server/ClassSchedulesScraper.js";
 import { Link } from "react-router";
 
 import { useState, useEffect, useRef } from "react";
 
-import { getProfessor } from "../scraper/ClassServerClient";
-import type { professorRating } from "../scraper/RateMyProfessorScraper";
+import { getProfessor } from "../utils/ClassServerClient.js";
+import type { professorRating } from "../../server/RateMyProfessorScraper.js";
 import { rmpCache } from "../lib/rmpCache";
 
 

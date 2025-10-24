@@ -1,10 +1,10 @@
 import { useParams, useLocation } from "react-router";
-import type { ClassRow } from "../scraper/ClassSchedulesScraper";
-import type { ClassDetails } from "../scraper/CourseCatalogScraper";
-import type { professorComment, professorRating } from "../scraper/RateMyProfessorScraper";
+import type { ClassRow } from "../../server/ClassSchedulesScraper.js";
+import type { ClassDetails } from "../../server/CourseCatalogScraper.js";
+import type { professorComment, professorRating } from "../../server/RateMyProfessorScraper.js";
 
-import { getClass, getClassDetails } from "../scraper/ClassServerClient";
-import { getProfessor } from "../scraper/ClassServerClient";
+import { getClass, getClassDetails } from "../utils/ClassServerClient.js";
+import { getProfessor } from "../utils/ClassServerClient.js";
 
 import { useState, useEffect } from "react";
 

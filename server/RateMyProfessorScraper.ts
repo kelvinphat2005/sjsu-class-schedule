@@ -1,6 +1,6 @@
 import { RateMyProfessor } from "rate-my-professor-api-ts";
 
-import { writeProfessorComments, writeProfessorRatings } from "../data/professorsDb";
+import { writeProfessorComments, writeProfessorRatings } from "../src/data/professorsDb.js";
 
 const rmp_instance = new RateMyProfessor("San Jose State University");
 

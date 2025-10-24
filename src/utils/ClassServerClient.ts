@@ -1,6 +1,6 @@
-import type { ClassRow } from "./ClassSchedulesScraper";
-import type { ClassDetails } from "./CourseCatalogScraper";
-import type { professorComment, professorRating } from "./RateMyProfessorScraper";
+import type { ClassRow } from "../../server/ClassSchedulesScraper.ts";
+import type { ClassDetails } from "../../server/CourseCatalogScraper.ts";
+import type { professorComment, professorRating } from "../../server/RateMyProfessorScraper.ts";
 
 // get all classes from `classes.json`
 export async function getClassesAPI(): Promise<ClassRow[]> {

@@ -1,22 +1,22 @@
 import express from "express";
 import fs from "fs";
 import { constants } from "node:fs";
-import type { ClassRow } from "./ClassSchedulesScraper";
+import type { ClassRow } from "./ClassSchedulesScraper.js";
 
-import { writeClassDetails, readClassDetails } from "../data/detailsDb";
-import { getClass } from "./ClassServerClient";
+import { writeClassDetails, readClassDetails } from "../src/data/detailsDb.js";
+// import { getClass } from "../src/utils/ClassServerClient";
 
-import { findCourseLink, getCourseDetails } from "./CourseCatalogScraper";
+import { findCourseLink, getCourseDetails } from "./CourseCatalogScraper.js";
 
-import { readProfessorComments, writeProfessorComments, readProfessorRatings, writeProfessorRatings } from "../data/professorsDb";
-import { getComments, getRatings } from "./RateMyProfessorScraper";
-import { getClasses } from "./ClassSchedulesScraper"; // <- use to seed once
+import { readProfessorComments, writeProfessorComments, readProfessorRatings, writeProfessorRatings } from "../src/data/professorsDb.js";
+import { getComments, getRatings } from "./RateMyProfessorScraper.js";
+import { getClasses } from "./ClassSchedulesScraper.js"; // <- use to seed once
 import path from "node:path";
 import { mkdir, readFile, writeFile, access } from "node:fs/promises";
 
-
-const PATH = path.resolve(process.cwd(), ".cache", "classes.json")
-const PATH2 = path.resolve(process.cwd(), ".cache", "classDetails.json");;
+const DATA_DIR = process.env.VERCEL ? "/tmp/.cache" : path.resolve(process.cwd(), ".cache");
+const PATH = path.join(DATA_DIR, "classes.json");
+const PATH2 = path.join(DATA_DIR, "classDetails.json");
 const PORT = 5174;
 
 const app = express();
@@ -47,8 +47,10 @@ async function init() {
   byClassNumber = new Map(rows.map(r => [r.classNumber, r]));
 }
 
+app.get(["/api", "/"], (_req, res) => res.json({ ok: true }));
+
 // read `classes.json` and return all classes
-app.get("/api/classes", async (req, res) => {
+app.get(["/api/classes", "/classes"], async (req, res) => {
     try {
         const text = await readFile(PATH, "utf8");
         const rows : ClassRow[] = JSON.parse(text) as ClassRow[];
@@ -60,7 +62,7 @@ app.get("/api/classes", async (req, res) => {
 });
 
 // get basic class details
-app.get("/api/classes/:classNumber", (req, res) => {
+app.get(["/api/classes/:classNumber", "/classes/:classNumber"], (req, res) => {
     const num = Number(req.params.classNumber);
     if (!Number.isFinite(num)) return res.status(400).json({ error: "classNumber must be a number" });
     const row = byClassNumber.get(num);
@@ -69,7 +71,7 @@ app.get("/api/classes/:classNumber", (req, res) => {
 });
 
 // get advanced class details
-app.get("/api/classes/:classNumber/details", async (req, res) => {
+app.get(["/api/professors/:professorName", "/professors/:professorName"], async (req, res) => {
     // check if it is saved locally and read
     // FUTURE: if the oid is not matching the global oid --> update
     // if not saved locally, fetch
@@ -123,9 +125,8 @@ app.get("/api/professors/:professorName", async (req, res) => {
     }
 });
 
-init()
-  .then(() => app.listen(PORT, () => console.log("API Running on", PORT)))
-  .catch((e) => {
-    console.error("Failed to init:", e);
-    process.exit(1);
-  });
+init().catch((e) => {
+  console.error("Failed to init:", e);
+});
+
+export default app;

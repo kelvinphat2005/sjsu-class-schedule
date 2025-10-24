@@ -1,4 +1,4 @@
-import type { professorComment, professorRating } from "../scraper/RateMyProfessorScraper";
+import type { professorComment, professorRating } from "../../server/RateMyProfessorScraper.js";
 
 interface professorRatingProps {
     rating: professorRating;

@@ -10,7 +10,7 @@ import type { ClassRow } from './scraper/ClassSchedulesScraper'
 
 import { ClassTile } from './components/ClassTile';
 
-import { getClassesAPI } from './scraper/ClassServerClient';
+import { getClassesAPI } from './utils/ClassServerClient';
 
 import { Virtuoso } from 'react-virtuoso'
 

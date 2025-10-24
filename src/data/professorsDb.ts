@@ -1,15 +1,18 @@
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
 import path from "node:path";
-
-import type { professorComment, professorRating } from "../scraper/RateMyProfessorScraper";
+import { mkdir } from "node:fs/promises";
+import type { professorComment, professorRating } from "../../server/RateMyProfessorScraper.js";
 
 type Data = {
     ratings: Record<string, professorRating>;
     comments: Record<string, professorComment[]>;
 };
 
-const FILE = path.resolve(process.cwd(), ".cache", "professors.json");
+const DATA_DIR = process.env.VERCEL ? "/tmp/.cache" : path.resolve(process.cwd(), ".cache");
+await mkdir(DATA_DIR, { recursive: true }).catch(() => {});
+const FILE = path.join(DATA_DIR, "professors.json");
+
 const adapter = new JSONFile<Data>(FILE);
 const db = new Low<Data>(adapter, { comments: {}, ratings: {} });
 

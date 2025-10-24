@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
-import { getClass, getClassesAPI } from "../scraper/ClassServerClient"
-import type { ClassRow } from "../scraper/ClassSchedulesScraper"
-import type { professorRating } from "../scraper/RateMyProfessorScraper";
-import { getProfessor } from "../scraper/ClassServerClient";
+import { getClass, getClassesAPI } from "../utils/ClassServerClient.js";
+import type { ClassRow } from "../../server/ClassSchedulesScraper.js";
+import type { professorRating } from "../../server/RateMyProfessorScraper.js";
+import { getProfessor } from "../utils/ClassServerClient.js";
 
 /**
  * Given a class number, find related sections
