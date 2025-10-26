@@ -89,8 +89,3 @@ export async function getCourseDetails(url : string, oid : string = "17") : Prom
     }
 }
 
-console.log(await getCourseDetails(await findCourseLink("AAS", "33A")));
-//console.log(await getCourseDetails(await findCourseLink("HUM", 80)));
-//console.log(await getCourseDetails(await findCourseLink("CS", 47)));
-//console.log(await getCourseDetails(await findCourseLink("ENGL", "1A")));
-

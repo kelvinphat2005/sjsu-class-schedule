@@ -142,5 +142,3 @@ export function splitSubjectCourseSection(input: string) {
 
   return { subject, course, sectionText };
 }
-
-getClasses().then((classes) => saveToJson(classes));

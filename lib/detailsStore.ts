@@ -11,15 +11,10 @@ export async function readClassDetails(courseKey: string): Promise<ClassDetails 
   return (await kv.get<ClassDetails>(key(courseKey))) ?? null;
 }
 
-export async function writeClassDetails(
-  details: ClassDetails,
-  ttlSeconds: number = DEFAULT_TTL
-): Promise<void> {
+export async function writeClassDetails( details: ClassDetails, ttlSeconds: number = DEFAULT_TTL): Promise<void> {
   const value: ClassDetails = { ...details};
   await kv.set(key(details.courseKey), value, { ex: ttlSeconds });
 }
-
-// Optional helpers — use if you want them:
 
 export async function deleteClassDetails(courseKey: string): Promise<void> {
   await kv.del(key(courseKey));

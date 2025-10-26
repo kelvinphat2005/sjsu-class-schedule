@@ -18,13 +18,41 @@ export type ClassRow = {
 };
 
 export type ClassDetails = {
-    oid: string, // keep track so it can be replaced with a new one
-    courseKey: string,
-    courseTitle: string,
-    credits: string,
-    description: string,
-    satisfies: string,
-    prereq: string,
-    grading: string,
-    notes?: string,
+  oid: string, // keep track so it can be replaced with a new one
+  courseKey: string,
+  courseTitle: string,
+  credits: string,
+  description: string,
+  satisfies: string,
+  prereq: string,
+  grading: string,
+  notes?: string,
+}
+
+export type Professor = {
+  name: string;
+  averageQuality: number;
+  difficulty: number;
+  wouldTakeAgainPercent: number;
+  department: string;
+  tags?: string[];
+  reviews?: ProfessorReview[];
+}
+
+export type ProfessorReview = {
+  profName: string;
+  date: Date;
+  quality: number;
+  difficulty: number;
+  class: string;
+  attendance: string;
+  wouldTakeAgain: boolean;
+  gradeReceived: string;
+  textbook: "Yes" | "No" | "N/A"; // rmp-api : 3 - yes, -1 - n/a, 
+  onlineClass: boolean;
+  grade: string;
+  reviewText: string;
+  likes: number;
+  dislikes: number;
+  tags: string[]; // rmp-api: string seperated with '--'
 }

@@ -25,6 +25,9 @@ export async function GET(
 
   // check cache
   const cached = await readClassDetails(courseKey);
+  if (cached) {
+    return NextResponse.json({ course: cached });
+  }
 
   // scrape on miss
   try {
@@ -34,8 +37,6 @@ export async function GET(
     await writeClassDetails(details); // write-through cache
     return NextResponse.json({ course: details });
   } catch {
-    // If scrape fails but we had *any* cache, serve it as stale.
-    if (cached) return NextResponse.json({ course: cached, stale: true });
     return NextResponse.json({ error: "details unavailable" }, { status: 503 });
   }
 }
