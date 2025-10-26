@@ -57,8 +57,8 @@ export async function getCourseDetails(url : string, oid : string = "17") : Prom
     // <td class="block_content"/> contains course details, only 1 exists
     const details = $("td.block_content").first()
 
-    const courseTitle = details.find("#course_preview_title").first().text().trim(); // course title has id=course_preview_title
-    const credits = details.find("em").first().text().trim(); // num of credits is in first em elements
+    const courseTitle = details.find("#course_preview_title").first().text().replace(/\s+/g, ' ').trim(); // course title has id=course_preview_title
+    const credits = details.find("em").first().text().replace(/\s+/g, ' ').trim(); // num of credits is in first em elements
 
     // find description (it has no tag xd)
     // also prereqs and grading ("letter graded")
@@ -66,12 +66,12 @@ export async function getCourseDetails(url : string, oid : string = "17") : Prom
         // Check if the node is a text node (nodeType 3)
         return this.nodeType === 3;
     });
-    const description = textNodes.eq(4).text().trim(); // may need to changed in the future
+    const description = textNodes.eq(4).text().replace(/\s+/g, ' ').trim(); // may need to changed in the future
 
     // prereqs
-    const prereq = getBetween($, "strong:contains('Prerequisite(s):')", "br").trim();
-    const grading = getBetween($, "strong:contains('Grading')", "br").trim();
-    const notes = getBetween($, "strong:contains('Note')", "br").trim();    
+    const prereq = getBetween($, "strong:contains('Prerequisite(s):')", "br").replace(/\s+/g, ' ').trim();
+    const grading = getBetween($, "strong:contains('Grading')", "br").replace(/\s+/g, ' ').trim();
+    const notes = getBetween($, "strong:contains('Note')", "br").replace(/\s+/g, ' ').trim();    
 
     // satisfies
     const satisfies = details.find("em:contains('Satisfies')").next().text().trim();
