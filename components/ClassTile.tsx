@@ -33,11 +33,11 @@ export default function ClassTile({ row, selected = false, onSelect }: ClassTile
         <span className="text-xs text-zinc-500">{row.section}</span>
       </header>
 
-      <p className="mt-1 text-sm text-zinc-700">{row.courseTitle}</p>
+      <p className="mt-1 text-sm text-white">{row.courseTitle}</p>
 
       {/* Professor */}
-      <p className="mt-1 text-xs text-zinc-600">
-        <span className="text-zinc-500">Professor: </span>
+      <p className="mt-1 text-xs text-white">
+        <span className="text-white">Professor: </span>
         {row.instructor || "TBA"}
       </p>
 

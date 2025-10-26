@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ClassDetails, ClassRow } from "@/types/domain";
+import RmpPanel from "@/components/RmpPanel";
 
 type Props = { id: number | null; row?: ClassRow | null };
 
@@ -55,6 +56,8 @@ export default function DetailsPane({ id, row }: Props) {
     return <div className="text-sm text-red-600">Couldn’t load details ({err}). Try again in a moment.</div>;
   }
   if (!data) return null;
+
+  const profName = row?.instructor ? normalizeProfessorName(row.instructor) : null;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -110,7 +113,7 @@ export default function DetailsPane({ id, row }: Props) {
           {row ? (
             <dl className="text-sm grid grid-cols-3 gap-x-3 gap-y-2">
               <dt className="col-span-1 text-zinc-500">Professor</dt>
-              <dd className="col-span-2">{row.instructor || "TBA"}</dd>
+              <dd className="col-span-2">{profName || "TBA"}</dd>
 
               <dt className="col-span-1 text-zinc-500">Section</dt>
               <dd className="col-span-2">{row.section}</dd>
@@ -152,6 +155,20 @@ export default function DetailsPane({ id, row }: Props) {
           )}
         </div>
       </aside>
+
+      
+        {profName && profName !== "TBA" && (
+            <div className="rounded-xl border p-4 mt-4 lg:col-span-3">
+            <h3 className="text-sm font-semibold mb-3">Professor ratings</h3>
+            <RmpPanel professorName={profName} />
+            </div>
+        )}
     </div>
   );
 }
+
+const normalizeProfessorName = (name: string) => {
+  const cleaned = name.replace(/\s*\(.*?\)\s*$/, "").trim();
+  const parts = cleaned.split(",").map(s => s.trim()).filter(Boolean);
+  return parts.length === 2 ? `${parts[1]} ${parts[0]}` : cleaned;
+};
