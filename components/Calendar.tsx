@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import type { ClassRow } from "@/types/domain";
 
-const DAY_LABELS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const tokenMap: Record<string, number> = { mon:0, m:0, tue:1, tu:1, t:1, wed:2, w:2, thu:3, th:3, r:3, fri:4, f:4, sat:5, sa:5, s:5, sun:6, su:6, u:6 };
+const DAY_LABELS = ["Mon","Tue","Wed","Thu","Fri"];
+const tokenMap: Record<string, number> = { mon:0, m:0, tue:1, tu:1, t:1, wed:2, w:2, thu:3, th:3, r:3, fri:4, f:4};
 
-const PX_PER_30 = 36;            // was 24
-const PX_PER_HOUR = PX_PER_30*2; // was 48
+const PX_PER_30 = 36;
+const PX_PER_HOUR = PX_PER_30*2;
 
 const timeToMin = (t: string) => {
   const m = t.trim().replace(/(am|pm)$/i, " $1").match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
@@ -48,7 +48,7 @@ export default function Calendar({ rows, onRemove }: { rows: ClassRow[]; onRemov
   }, [minMin, maxMin]);
 
   const byDay = useMemo(() => {
-    const m: Record<number, Event[]> = {0:[],1:[],2:[],3:[],4:[],5:[],6:[]};
+    const m: Record<number, Event[]> = {0:[],1:[],2:[],3:[],4:[]};
     for (const e of events) m[e.d].push(e);
     for (const d of Object.keys(m)) m[+d].sort((x,y)=>x.start-y.start);
     return m;
@@ -79,7 +79,7 @@ export default function Calendar({ rows, onRemove }: { rows: ClassRow[]; onRemov
                   <div className="text-xs text-gray-600">
                     {fmt(e.start)}–{fmt(e.end)} · {e.row.location} · {e.row.type}
                   </div>
-                  {/* instructor already shown on mobile */}
+                  
                   <div className="mt-1 text-xs text-gray-500">{e.row.instructor}</div>
                 </div>
               )) : <div className="text-xs text-gray-4 00">No classes</div>}
@@ -90,7 +90,7 @@ export default function Calendar({ rows, onRemove }: { rows: ClassRow[]; onRemov
 
       {/* Desktop weekly grid */}
       <div className="hidden md:block">
-        <div className="grid grid-cols-[64px_repeat(7,1fr)] gap-x-2">
+        <div className="grid grid-cols-[64px_repeat(5,1fr)] gap-x-2">
           <div />
           {DAY_LABELS.map(d => <div key={d} className="py-2 text-center text-sm font-semibold text-gray-700">{d}</div>)}
 
@@ -98,9 +98,9 @@ export default function Calendar({ rows, onRemove }: { rows: ClassRow[]; onRemov
           <div
             className="relative border-r"
             style={{
-              height: `${halfRows*PX_PER_30}px`,                      // was *24
+              height: `${halfRows*PX_PER_30}px`,
               backgroundImage:"linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)",
-              backgroundSize:`100% ${PX_PER_HOUR}px`                  // was 48px
+              backgroundSize:`100% ${PX_PER_HOUR}px`
             }}
           >
             {hourMarks.map(m => (
@@ -115,19 +115,19 @@ export default function Calendar({ rows, onRemove }: { rows: ClassRow[]; onRemov
           </div>
 
           {/* day columns */}
-          {Array.from({length:7}).map((_, day) => (
+          {Array.from({length:5}).map((_, day) => (
             <div
               key={day}
               className="relative rounded-md border"
               style={{
-                height:`${halfRows*PX_PER_30}px`,                     // was *24
+                height:`${halfRows*PX_PER_30}px`,
                 backgroundImage:"linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)",
-                backgroundSize:`100% ${PX_PER_HOUR}px`                // was 48px
+                backgroundSize:`100% ${PX_PER_HOUR}px`
               }}
             >
               {events.filter(e=>e.d===day).map((e) => {
-                const top = ((e.start - minMin)/30)*PX_PER_30 + 2;    // was *24
-                const height = ((e.end - e.start)/30)*PX_PER_30 - 4;  // was *24
+                const top = ((e.start - minMin)/30)*PX_PER_30 + 2;
+                const height = ((e.end - e.start)/30)*PX_PER_30 - 4;
                 return (
                   <div
                     key={e.key}
@@ -154,7 +154,7 @@ export default function Calendar({ rows, onRemove }: { rows: ClassRow[]; onRemov
                     <div className="text-[10px] leading-tight truncate opacity-90">
                       {e.row.courseTitle}
                     </div>
-                    {/* NEW: professor/instructor line on desktop */}
+                    
                     <div className="text-[10px] leading-tight truncate opacity-90">
                       {e.row.instructor}
                     </div>
