@@ -5,9 +5,11 @@ import ClassList from "@/components/ClassList";
 import DetailsPane from "@/components/DetailsPane";
 import type { ClassRow } from "@/types/domain";
 
-type Props = { rows: ClassRow[] };
+interface ScheduleViewProps {
+    rows: ClassRow[]
+};
 
-export default function ScheduleView({ rows }: Props) {
+export default function ScheduleView({ rows }: ScheduleViewProps) {
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const handleSelect = useCallback((row: ClassRow) => setSelectedId(row.classNumber), []);
     const selectedRow = useMemo(

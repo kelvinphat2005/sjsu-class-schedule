@@ -1,13 +1,14 @@
 import { getClassesSync } from "@/lib/classes";
 
-import ScheduleView from "@/components/ScheduleView";
+import CalendarView from "@/components/CalendarView";
+
 
 export default function Page() {
   const { rows } = getClassesSync();
 
   return (
     <main className="h-full">
-      <ScheduleView rows={rows} />
+      <CalendarView rows={rows} />
     </main>
   );
 }
