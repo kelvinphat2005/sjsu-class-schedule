@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/update-classes",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
