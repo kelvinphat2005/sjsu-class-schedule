@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/update-classes",
+      "schedule": "*/15 * * * *"
+    }
+  ]
+}

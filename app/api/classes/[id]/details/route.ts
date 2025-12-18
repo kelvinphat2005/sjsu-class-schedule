@@ -17,7 +17,7 @@ export async function GET(
     return NextResponse.json({ error: "id must be a number" }, { status: 400 });
   }
 
-  const { byId } = getClassesSync();
+  const { byId } = await getClassesSync();
   const row = byId.get(id);
   if (!row) return NextResponse.json({ error: "class not found" }, { status: 404 });
 
