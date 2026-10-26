@@ -6,7 +6,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 import type { ClassRow } from "@/types/domain";
 
-const URL: string = "https://www.sjsu.edu/classes/schedules/fall-2026.php";
+const URL: string = "https://sjsu.edu/classes/schedules/spring-2027.php";
 
 
 async function getHTML(page: string): Promise<string> {

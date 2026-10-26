@@ -52,9 +52,6 @@ export default function DetailsPane({ id, row }: Props) {
 
     if (!id) return <div className="text-sm text-zinc-500">Select a class to see details.</div>;
     if (loading) return <div className="text-sm text-zinc-500">Loading…</div>;
-    if (err) {
-        return <div className="text-sm text-red-600">Couldn’t load details ({err}). Try again in a moment.</div>;
-    }
     if (!data) return null;
 
     const profName = row?.instructor ? normalizeProfessorName(row.instructor) : null;
@@ -62,24 +59,27 @@ export default function DetailsPane({ id, row }: Props) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left: long-form details */}
-            <article className="prose prose-zinc dark:prose-invert max-w-none lg:col-span-2">
-                <header className="mb-4">
-                    <h2 className="m-0">{data.courseTitle}</h2>
-                    <p className="m-0 text-sm text-zinc-500">
-                        {data.courseKey} · {data.credits} credits {stale && <span className="ml-2">· (cached)</span>}
-                    </p>
-                </header>
+            {(err || !data) && (
+                <article className="prose prose-zinc dark:prose-invert max-w-none lg:col-span-2">
+                    <header className="mb-4">
+                        <h2 className="m-0">{data.courseTitle}</h2>
+                        <p className="m-0 text-sm text-zinc-500">
+                            {data.courseKey} · {data.credits} credits {stale && <span className="ml-2">· (cached)</span>}
+                        </p>
+                    </header>
 
-                {data.description && <Label header="Description" value={data.description} />}
+                    {data.description && <Label header="Description" value={data.description} />}
 
-                {data.prereq && <Label header="Prerequisites" value={data.prereq} />}
+                    {data.prereq && <Label header="Prerequisites" value={data.prereq} />}
 
-                {data.satisfies && <Label header="Satisfies" value={data.satisfies} />}
+                    {data.satisfies && <Label header="Satisfies" value={data.satisfies} />}
 
-                {data.grading && <Label header="Grading" value={data.grading} />}
+                    {data.grading && <Label header="Grading" value={data.grading} />}
 
-                {data.notes && <Label header="Notes" value={data.notes} />}
-            </article>
+                    {data.notes && <Label header="Notes" value={data.notes} />}
+                </article>
+            )}
+
 
             {/* Right: compact “box” with roster/meeting info */}
             <aside className="lg:col-span-1">
