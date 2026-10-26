@@ -58,7 +58,7 @@ export default function DetailsPane({ id, row }: Props) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left: long-form details */}
-            {(err || !data) && (
+            {(!err && data) && (
                 <article className="prose prose-zinc dark:prose-invert max-w-none lg:col-span-2">
                     <header className="mb-4">
                         <h2 className="m-0">{data.courseTitle}</h2>
