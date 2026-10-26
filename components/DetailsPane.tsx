@@ -52,7 +52,6 @@ export default function DetailsPane({ id, row }: Props) {
 
     if (!id) return <div className="text-sm text-zinc-500">Select a class to see details.</div>;
     if (loading) return <div className="text-sm text-zinc-500">Loading…</div>;
-    if (!data) return null;
 
     const profName = row?.instructor ? normalizeProfessorName(row.instructor) : null;
 
