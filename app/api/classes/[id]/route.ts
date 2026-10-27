@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getClassesSync } from "@/lib/classes";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   const { id: idParam } = await ctx.params;
   const id = Number.parseInt(idParam?.trim() ?? "", 10);
